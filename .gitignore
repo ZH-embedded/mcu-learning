@@ -30,6 +30,13 @@ cmake-build-*/
 *.exe
 *.out
 
+# 过程截图与音视频（只留本地，精选的另行复制进各项目目录）
+_shots/
+*.mp4
+*.avi
+*.mov
+*.wav
+
 # 系统
 Thumbs.db
 desktop.ini
