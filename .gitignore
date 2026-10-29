@@ -1,0 +1,37 @@
+# Keil / CubeIDE 构建产物
+*.o
+*.d
+*.su
+*.elf
+*.hex
+*.map
+*.list
+*.axf
+*.crf
+*.dep
+*.htm
+*.lnp
+*.sct
+*.iex
+*.build_log.htm
+Debug/
+Release/
+build/
+cmake-build-*/
+
+# CubeIDE 生成文件
+.mxproject
+.settings/
+.project
+.cproject
+*.launch
+
+# 系统
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# 日志与临时
+*.log
+*.bak
+*.tmp
