@@ -1,7 +1,6 @@
 # mcu-learning
 
-嵌入式 MCU 学习与项目日志（2026-10-29 起，102 天计划）。
-目标：2026-12-20 前完成两个可演示项目 + 简历；2027 春节前拿到 offer。
+嵌入式 MCU 学习与项目日志。
 
 ## 目录
 
@@ -12,18 +11,18 @@
 | `03-rtos/` | FreeRTOS 练习（任务、队列、互斥、优先级反转） |
 | `04-comm/` | Modbus RTU、RS485、IAP 升级 |
 | `notes/` | 故障记录、知识点卡片、踩坑总结 |
-| `_setup/` | 环境搭建截图（工具链证据） |
+| `_setup/` | 环境搭建截图 |
 
 ## 开发板
 
-![board](_setup/board-pinout.png)
+![alt text](fd932b5cbaeb989e830962406bf735c6.jpg)
 
-- 主控：**待填**（看芯片丝印，如 STM32F103ZET6）
-- LED：待填（如 PB5，低电平亮）
-- 按键：待填（如 KEY0=PE4 / WK_UP=PA0）
-- 串口：待填（如 USART1 = PA9 TX / PA10 RX，板载 CH340）
+- 主控：STM32F103ZET6
+- LED：PA0，PA1,PA8低电平亮
+- 按键：KEY1 = PF8,KEY2 = PF9,KEY3 = PF10,KEY4 = PF11,
+- 串口：USART1 = PA9 TX / PA10 RX，板载 CH340
 - SWD：3V3 / GND / SWDIO(PA13) / SWCLK(PA14)
-- 下载方式：待填（ST-Link / DAP-Link / 串口 ISP）
+- 下载方式：ST-Link 
 
 ## 进度
 
@@ -37,7 +36,4 @@
 - [ ] FreeRTOS + Modbus
 - [ ] 项目二 + IAP 升级
 
-## 约定
 
-- 每天至少一次 commit，哪怕只改一行（提交历史本身就是"这是我自己做的"的证据）
-- 遇到的问题一律进 `notes/故障记录.md`：现象 → 复现条件 → 定位 → 根因 → 修复 → 如何避免
