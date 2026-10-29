@@ -14,9 +14,23 @@
 | `notes/` | 故障记录、知识点卡片、踩坑总结 |
 | `_setup/` | 环境搭建截图（工具链证据） |
 
+## 开发板
+
+![board](_setup/board-pinout.png)
+
+- 主控：**待填**（看芯片丝印，如 STM32F103ZET6）
+- LED：待填（如 PB5，低电平亮）
+- 按键：待填（如 KEY0=PE4 / WK_UP=PA0）
+- 串口：待填（如 USART1 = PA9 TX / PA10 RX，板载 CH340）
+- SWD：3V3 / GND / SWDIO(PA13) / SWCLK(PA14)
+- 下载方式：待填（ST-Link / DAP-Link / 串口 ISP）
+
 ## 进度
 
-- [x] 2026-10-29 环境搭建：VS Code / gcc / Git / CubeIDE / 串口助手 / PulseView
+- [x] 2026-10-29 基础工具链：VS Code / gcc / Git / hello world 跑通
+- [x] 2026-10-29 GitHub 仓库建立，素材管理结构就位
+- [ ] 2026-10-29 STM32CubeIDE 安装 + 空工程编译通过
+- [ ] 2026-10-29 串口工具 + PulseView 安装
 - [ ] 第 1 周 C 语言地基
 - [ ] 第 2 周 上板外设
 - [ ] 项目一 环境监测终端
