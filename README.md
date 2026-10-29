@@ -1,6 +1,7 @@
 # mcu-learning
 
-嵌入式 MCU 学习与项目日志。
+嵌入式 MCU 学习与项目日志 · 2026 年秋起，路线：C 语言 → 裸机外设 → FreeRTOS → 通信协议 → 完整项目。
+两个项目目标：**环境监测终端**（采集/显示/上报）、**RTOS + Modbus + 串口 IAP 升级**。
 
 ## 目录
 
@@ -10,19 +11,21 @@
 | `02-stm32/` | 裸机外设练习（GPIO / 中断 / 串口 / 定时器 / ADC / I2C / SPI） |
 | `03-rtos/` | FreeRTOS 练习（任务、队列、互斥、优先级反转） |
 | `04-comm/` | Modbus RTU、RS485、IAP 升级 |
-| `notes/` | 故障记录、知识点卡片、踩坑总结 |
-| `_setup/` | 环境搭建截图 |
+| `notes/` | 故障记录、每日日志、素材管理规范 |
+| `_setup/` | 环境搭建证据（工具链截图、开发板引脚表） |
 
 ## 开发板
 
-![alt text](fd932b5cbaeb989e830962406bf735c6.jpg)
+![尚硅谷 STM32F103ZET6 开发板](_setup/board-pinout.jpg)
 
-- 主控：STM32F103ZET6
-- LED：PA0，PA1,PA8低电平亮
-- 按键：KEY1 = PF8,KEY2 = PF9,KEY3 = PF10,KEY4 = PF11,
-- 串口：USART1 = PA9 TX / PA10 RX，板载 CH340
-- SWD：3V3 / GND / SWDIO(PA13) / SWCLK(PA14)
-- 下载方式：ST-Link 
+- **主控**：STM32F103ZET6（144 脚 / 512K Flash / 64K RAM）
+- **LED**：PA0 / PA1 / PA8，低电平点亮（另有 PG11 电源指示灯）
+- **按键**：PF8 / PF9（按下为高）、PF10 / PF11（按下为低）
+- **串口**：USART1 = PA9(TX) / PA10(RX)，板载 CH340
+- **SWD**：3V3 / GND / SWDIO(PA13) / SWCLK(PA14)
+- **调试器**：ST-Link（含虚拟串口 COM4）
+
+完整引脚对照见 [`_setup/README.md`](_setup/README.md)。
 
 ## 进度
 
@@ -36,4 +39,7 @@
 - [ ] FreeRTOS + Modbus
 - [ ] 项目二 + IAP 升级
 
+## 约定
 
+- 每天至少一次 commit，哪怕只改一行（提交历史本身就是"这是我自己做的"的证据）
+- 遇到的问题一律进 `notes/故障记录.md`：现象 → 复现条件 → 定位 → 根因 → 修复 → 如何避免
