@@ -26,6 +26,10 @@ cmake-build-*/
 .cproject
 *.launch
 
+# PC 端编译产物
+*.exe
+*.out
+
 # 系统
 Thumbs.db
 desktop.ini
