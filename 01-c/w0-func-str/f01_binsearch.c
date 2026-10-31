@@ -20,10 +20,26 @@
  * ============================================================ */
 int bin_search(const int arr[], int n, int target)
 {
-    /* 返回值 -2 是"还没实现"的占位，
-     * 写完你的代码后，测试里就不该再看到 -2 了 */
-    (void)arr; (void)n; (void)target;
-    return -2;
+    int left = 0;
+    int right = n;
+    while (left < right)
+        {
+            int i = (left + right)/2;
+            if (arr[i] == target)
+            {
+                return i;
+            }
+            
+            if(arr[i] < target)
+            {
+                left = i + 1;
+            }
+            if(arr[i] > target)
+            {
+                right = i;
+            }
+        }   
+    return -1;
 }
 
 /* ============================================================

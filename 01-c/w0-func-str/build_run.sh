@@ -41,9 +41,11 @@ done
 } > "$OUT"
 
 echo
-for bin in f*.exe; do
-    [ -e "$bin" ] || continue
-    name="${bin%.exe}"
+for src in f*.c; do
+    [ -e "$src" ] || continue
+    bin="${src%.c}.exe"
+    [ -e "$bin" ] || continue          # 编译失败的不跑
+    name="${src%.c}"
     line=$(./"$bin")
     rc=$?
     echo "===================== $name =====================" >> "$OUT"

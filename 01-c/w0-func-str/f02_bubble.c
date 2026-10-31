@@ -20,8 +20,34 @@ int g_compare_count = 0;   /* 在实现里每次比较前 ++ */
  * ============================================================ */
 int bubble_sort(int arr[], int n)
 {
-    (void)arr; (void)n;
-    return -1;      /* -1 = 还没实现 */
+    int i = 0;
+    int count = 0;//交换次数
+    while (i < n - 1)
+    {
+        int j = 0;
+        int swapped = 0;
+        while (j < n - 1 - i)
+        {
+            g_compare_count++;
+            if(arr[j] > arr[j + 1])
+            {
+                int temp = arr[j];
+                arr[j] = arr[j + 1];
+                arr[j + 1] = temp;
+                count++;
+                swapped = 1;                
+            }           
+            j++;
+        }
+        if (swapped == 0)
+        {
+            return count;
+        }
+        
+        i++;
+    }
+    
+    return count;      
 }
 
 /* ============================================================

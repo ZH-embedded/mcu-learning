@@ -37,6 +37,10 @@ _shots/
 *.mov
 *.wav
 
+# 编辑器配置（每个人一份，别进仓库）
+.vscode/
+.idea/
+
 # 系统
 Thumbs.db
 desktop.ini

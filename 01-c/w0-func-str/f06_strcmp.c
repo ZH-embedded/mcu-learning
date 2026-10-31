@@ -28,8 +28,18 @@
  * ============================================================ */
 int my_strcmp(const char *a, const char *b)
 {
-    (void)a; (void)b;
-    return 999;     /* 999 = 还没实现（合法返回值，但符号不对，测试会抓到） */
+    int i = 0;
+    while ((a[i] != '\0')||(b[i] != '\0'))
+    {
+        if((unsigned char) a[i] > (unsigned char) b[i])
+        return 1;
+        if((unsigned char) a[i] < (unsigned char) b[i])
+        return -1;
+        if((unsigned char) a[i] == (unsigned char) b[i])
+        i++;
+    }
+    return 0;
+    
 }
 
 /* ============================================================
