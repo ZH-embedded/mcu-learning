@@ -20,9 +20,12 @@ int main(void)
     printf("0.1 + 0.2      = %.20f\n", a + b);
     printf("0.3            = %.20f\n", 0.3);
     printf("0.1 + 0.2 - 0.3 = %.20e\n", (a + b) - 0.3);
-    printf("(a + b) == 0.3 = %d   ← 0 表示假\n", (a + b) == 0.3);
-    printf("近似比较       = %d   ← 1 表示真（误差 < 1e-9）\n",
-           approx_eq(a + b, 0.3, 1e-9));
+    if(0.1 + 0.2 == 0.3)
+    {
+        printf("1\n");//不打印，因为浮点数计算机十进制转2进制时不一定除尽
+    }
+    printf("近似比较  0.1 + 0.2 - 0.3 = %d   ← 1 表示真（误差 < 1e-9）\n",
+            approx_eq(a + b, 0.3, 1e-9));
 
     printf("\n== 二、float 比 double 更早出错 ==\n");
     {
@@ -39,19 +42,6 @@ int main(void)
     printf("float  1.0f/3.0f = %.12f\n", (double)(1.0f / 3.0f));
     printf("double 1.0/3.0   = %.16f\n", 1.0 / 3.0);
 
-    printf("\n== 四、累加一万个 0.1 的漂移 ==\n");
-    {
-        double sum_d = 0.0;
-        float  sum_f = 0.0f;
-        int i;
-        for (i = 0; i < 10000; i++) {
-            sum_d += 0.1;
-            sum_f += 0.1f;
-        }
-        printf("double 累加 = %.10f  （误差 %.3e）\n", sum_d, dabs(sum_d - 1000.0));
-        printf("float  累加 = %.10f  （误差 %.3e）\n", (double)sum_f,
-               dabs((double)sum_f - 1000.0));
-    }
 
     printf("\n结论：\n");
     printf("1) 浮点数不能用 == 比较，用 |a-b| < eps\n");

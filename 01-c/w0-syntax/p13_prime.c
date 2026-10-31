@@ -63,12 +63,5 @@ int main(void)
         printf("结论：合数用 break 能省掉大量循环；素数两者一样，因为本来就要跑完\n");
     }
 
-    printf("\n边界值自测：\n");
-    printf("  -3 → %s，0 → %s，1 → %s，2 → %s，4 → %s，9 → %s，25 → %s\n",
-           is_prime(-3) ? "素数" : "非素数", is_prime(0) ? "素数" : "非素数",
-           is_prime(1) ? "素数" : "非素数", is_prime(2) ? "素数" : "非素数",
-           is_prime(4) ? "素数" : "非素数", is_prime(9) ? "素数" : "非素数",
-           is_prime(25) ? "素数" : "非素数");
-
     return 0;
 }

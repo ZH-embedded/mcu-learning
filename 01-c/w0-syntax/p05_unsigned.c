@@ -41,20 +41,6 @@ int main(void)
         printf("  → 下溢后的“巨大值”有多大，取决于类型宽度\n");
     }
 
-    printf("\n== 附：无符号倒序循环 —— 嵌入式死循环头号成因 ==\n");
-    {
-        unsigned int i;
-        int guard = 0;
-
-        for (i = 3; i >= 0; i--) {          /* i >= 0 对无符号恒为真 */
-            printf("  i = %u\n", i);
-            if (++guard > 5) {
-                printf("  ... 停不下来：0 再减 1 回绕成 4294967295\n");
-                break;                       /* 演示用，真实代码里不该有 */
-            }
-        }
-        printf("  正确写法：for (i = n; i-- > 0; )  或  for (i = n; i > 0; i--)\n");
-    }
-
+   
     return 0;
 }

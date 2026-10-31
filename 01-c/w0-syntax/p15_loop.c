@@ -73,7 +73,6 @@ int main(void)
     printf("1) 次数确定 → for；次数不确定但可能一次都不做 → while；至少做一次 → do-while\n");
     printf("2) do-while 的典型场景：先采样再判断、菜单至少显示一次、重试逻辑\n");
     printf("3) while + continue 时，自增一定要在 continue 之前，否则死循环\n");
-    printf("4) 任何循环都问一句：这个循环一定会结束吗？靠什么条件结束？\n");
 
     return 0;
 }
