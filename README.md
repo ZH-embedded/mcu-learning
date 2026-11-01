@@ -31,10 +31,11 @@
 
 - [x] 2026-10-29 基础工具链：VS Code / gcc / Git / hello world 跑通
 - [x] 2026-10-29 GitHub 仓库建立，素材管理结构就位
-- [ ] 2026-10-29 STM32CubeIDE 安装 + 空工程编译通过
+- [x] 2026-11-01 上板工具链定版：Keil MDK-ARM 5.38a + CubeMX + ST-Link（不装 CubeIDE，Keil 已具备同等的编译与下载能力）
 - [ ] 2026-10-29 串口工具 + PulseView 安装
 - [x] 2026-10-30 C 语法速通（一）15 题（`01-c/w0-syntax/`）
-- [ ] 2026-10-31 C 语法速通（二）6 题：二分 / 冒泡 / 计算器 / strlen / strcpy / strcmp（`01-c/w0-func-str/`）
+- [x] 2026-10-31 C 语法速通（二）6 题：二分 / 冒泡 / 计算器 / strlen / strcpy / strcmp（`01-c/w0-func-str/`）
+- [x] 2026-11-01 第一次上板点灯：STM32 走 SWD、51 走 ISP 冷启动，两块板各点一次（`02-stm32/2026-11-01-blink/`）
 - [ ] 第 1 周 C 语言地基
 - [ ] 第 2 周 上板外设
 - [ ] 项目一 环境监测终端

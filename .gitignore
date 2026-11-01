@@ -19,6 +19,19 @@ Release/
 build/
 cmake-build-*/
 
+# Keil 本机文件（窗口布局、调试器选择，每台机器不一样）
+*.uvguix.*
+*.uvgui.*
+*.uvoptx
+*.uvopt
+*.lst
+*.obj
+*.m51
+
+# Keil C51 / MDK 的构建输出目录
+Objects/
+Listings/
+
 # CubeIDE 生成文件
 .mxproject
 .settings/
