@@ -1,0 +1,145 @@
+运行环境：gcc.exe (x86_64-win32-seh-rev0, Built by MinGW-Builds project) 13.2.0
+生成时间：2026-11-02 23:11
+
+===================== p01_addr =====================
+=== p01 地址与解引用 ===
+
+a 的值        = 42
+&a 的地址     = 000000dcaebff9f4
+arr 的值      = 000000dcaebff9e0   ← 和 &arr[0] 是同一个地址
+&arr[0]       = 000000dcaebff9e0
+sizeof(int)   = 4 字节
+sizeof(int *) = 8 字节   ← 指针要装下一个地址，64 位机器上就是 8
+
+--- 测试 ---
+  [PASS] first_elem 返回 arr[0] 的地址 指向同一处
+  [PASS] first_elem 解引用得 10       = 10
+  [PASS] replace 返回旧值 42          = 42
+  [PASS] a 已被改成 100               = 100
+  [PASS] replace 返回 arr[3] 旧值 40  = 40
+  [PASS] arr[3] 已是 7                  = 7
+
+结果: 6 通过, 0 失败
+
+===================== p02_swap =====================
+=== p02 指针版 swap ===
+
+初始：x=1 y=2
+swap_by_value 之后：x=1 y=2
+↑ 这里必须是【没变】。如果它变了，说明你的「值传递版」偷偷用了指针，
+  那就回到题目本意了——请把它改回纯值传递。
+
+swap_by_ptr   之后：x=2 y=1
+
+--- 测试 ---
+  [PASS] 值传递版：x 保持 1（证明改不到外面） = 1
+  [PASS] 值传递版：y 保持 2                = 2
+  [PASS] 指针版：x 变成 2                   = 2
+  [PASS] 指针版：y 变成 1                   = 1
+  [PASS] 两数相同时 x 仍为 -5              = -5
+  [PASS] 两数相同时 y 仍为 -5              = -5
+  [PASS] 交换数组元素 arr[0]                = 9
+  [PASS] 交换数组元素 arr[1]                = 7
+
+结果: 8 通过, 0 失败
+
+===================== p03_walk =====================
+=== p03 指针遍历数组 ===
+
+--- 测试 ---
+  [PASS] sum a[5] = 14                              = 14
+  [PASS] sum b[4] = 100                             = 100
+  [PASS] sum 空数组(n=0) = 0                     = 0
+  [PASS] sum 单元素 = 99                         = 99
+  [PASS] max_ptr a → a[4]=5                       指向正确的元素
+  [PASS] max_ptr b → b[3]=40                      指向正确的元素
+  [PASS] max_ptr 单元素 → c[0]                 指向正确的元素
+  [PASS] max_ptr n=0 返回 NULL                    = 1
+  [PASS] max_ptr 重复值 → 取第一个 (dup[0]) 指向正确的元素
+  [PASS] 反转 5 元素 a[0]                       = 5
+  [PASS] 反转 5 元素 a[1]                       = 1
+  [PASS] 反转 5 元素 a[2] (中间不动)        = 4
+  [PASS] 反转 5 元素 a[3]                       = 1
+  [PASS] 反转 5 元素 a[4]                       = 3
+  [PASS] 反转偶数个 b[0]                       = 40
+  [PASS] 反转偶数个 b[3]                       = 10
+  [PASS] 反转单元素 = 99                       = 99
+  [PASS] find_set 找到 7 → 返回 1             = 1
+  [PASS] find_set 后 ptr 指向 buf[2]             指向正确的元素
+  [PASS] find_set 找不到 100 → 返回 0        = 0
+  [PASS] 找不到时 ptr 不许改（仍指向 buf[0]） 指向正确的元素
+
+结果: 21 通过, 0 失败
+
+===================== p04_second =====================
+=== p04 二级指针 ===
+
+&p  = 000000b104fffe68   p 这个变量自己的地址
+pp  = 000000b104fffe68   ← 和上面一样
+p   = 0000000000000000   （还没赋值，是 NULL）
+
+--- 测试 ---
+  [PASS] point_to 到 idx=2 → 返回 1              = 1
+  [PASS] p 现在指向 arr[2]                        指向正确
+  [PASS] 顺着 p 取值 = 300                        = 300
+  [PASS] **pp = 300（两层解引用）              = 300
+  [PASS] point_to 越界 idx=4 → 返回 0           = 0
+  [PASS] 越界时 p 不许改（仍指向 arr[2]）  指向正确
+  [PASS] point_to 负下标 → 返回 0              = 0
+  [PASS] point_to pp=NULL → 返回 0                = 0
+  [PASS] point_to arr=NULL → 返回 0               = 0
+  [PASS] 上面两次失败都没改 q                指向正确
+  [PASS] take_and_clear 返回原指针               指向正确
+  [PASS] take_and_clear 后 r 被置 NULL             = 1
+  [PASS] take_and_clear(NULL) 返回 NULL             = 1
+  [PASS] sum_ptr_list = 6                             = 6
+  [PASS] sum_ptr_list n=0 = 0                         = 0
+
+结果: 15 通过, 0 失败
+
+===================== p05_decl =====================
+=== p05 类型辨析：int *p[3] vs int (*p)[3] ===
+
+sizeof(*ptr_arr) = 8   ← ptr_arr 的元素是 int*，8 字节
+sizeof(ptr_arr)  = 24   ← 3 个 int*，3*8 = 24
+
+sizeof(*mat)     = 12   ← *mat 就是那一行 int[3]，3*4 = 12
+sizeof(mat)      = 36   ← 整个 3x3，9*4 = 36
+sizeof(mat[0])   = 12   ← 第一行，同样 12
+
+注意：mat[0] 是 int *（退化），&mat[0] 是 int (*)[3]（数组指针）
+      mat[0]      = 0000007e237ffd20
+      (void*)&mat = 0000007e237ffd20   （同一片内存，值相同）
+
+--- 测试 ---
+  [PASS] sizeof(int *p[3]) 元素 = int*                = 8
+  [PASS] sizeof(int *p[3]) 整体 = 24                  = 24
+  [PASS] sizeof(*(int (*p)[3])) = 12                    = 12
+  [PASS] sizeof(int (*p)[3] 指向的 3x3) = 36         = 36
+  [PASS] sum_ptr_array = 6                              = 6
+  [PASS] sum_ptr_array n=0 = 0                          = 0
+  [PASS] sum_matrix 3x3 = 45                            = 45
+  [PASS] sum_matrix 只求前 2 行 = 21                = 21
+  [PASS] sum_matrix rows=0 = 0                          = 0
+  [PASS] sum_ptr_array_2d = 45                          = 45
+  [PASS] sum_ptr_array_2d 前 2 行 = 21                = 21
+
+结果: 11 通过, 0 失败
+
+===================== p06_bug =====================
+=== p06 指针 bug 挑错 ===
+
+--- 测试 ---
+  [PASS] get_safe 写回 12345                          = 12345
+  [PASS] get_safe 返回传入的地址                 = 1
+  [PASS] get_safe(NULL) 返回 NULL                     = 1
+  [PASS] fill_ok 正确填满 0..4                      = 1
+  [PASS] fill_ok 遇 n=0 / NULL 不崩、不写内存   = 0
+  [PASS] sum_or_zero(NULL, 5) = 0                       = 0
+  [PASS] sum_or_zero(arr, 0) = 0                        = 0
+  [PASS] sum_or_zero(b, 3) = 11                         = 11
+  [PASS] count_ok 传入 7 就返回 7                  = 7
+  （对照）sizeof(int*)/sizeof(int) = 8/4 = 2  ← 错误版本得到的就是这个
+
+结果: 9 通过, 0 失败
+
