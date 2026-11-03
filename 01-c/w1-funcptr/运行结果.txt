@@ -1,0 +1,171 @@
+运行环境：gcc.exe (x86_64-win32-seh-rev0, Built by MinGW-Builds project) 13.2.0
+生成时间：2026-11-04 00:59
+
+===================== p01_funcptr =====================
+=== p01 函数指针 ===
+
+op == add 吗？   是   ← 函数名本身就是入口地址
+op(3,4)         = 7
+(*op)(3,4)      = 7   ← 和上面一样，两种写法等价
+sizeof(binop_t) = 8 字节   ← 函数指针也是指针
+--- 测试 ---
+  [PASS] apply_binop(add, 3, 4)             = 7
+  [PASS] apply_binop(sub, 3, 4)             = -1
+  [PASS] apply_binop(mul, 3, 4)             = 12
+  [PASS] apply_binop(NULL) 返回 0         = 0
+  [PASS] select_op('+') 是 add             指向同一函数
+  [PASS] select_op('-') 是 sub             指向同一函数
+  [PASS] select_op('*') 是 mul             指向同一函数
+  [PASS] select_op('?') 是 NULL            指向同一函数
+  [PASS] table[0](6,2) 加法               = 8
+  [PASS] table[1](6,2) 减法               = 4
+  [PASS] table[2](6,2) 乘法               = 12
+  [PASS] apply_all(mul) 返回 4 对        = 4
+  [PASS] apply_all(mul) 结果              前 4 个全对
+  [PASS] apply_all(add) 返回 4 对        = 4
+  [PASS] apply_all(add) 结果              前 4 个全对
+  [PASS] apply_all(NULL) 返回 0           = 0
+  [PASS] apply_all n=0 返回 0             = 0
+  [PASS] apply_all a=NULL 返回 0          = 0
+
+结果: 18 通过, 0 失败
+
+===================== p02_callback =====================
+=== p02 回调 ===
+
+  [PASS] for_each(bump_one) 每个都加一 全对
+  [PASS] for_each 调了 4 次回调        = 4
+  [PASS] for_each n=0 不调用回调       = 0
+  [PASS] for_each arr=NULL 不崩           = 0
+  [PASS] count_if(is_even) = 3 个          = 3
+  [PASS] count_if(is_neg)  = 2 个          = 2
+  [PASS] count_if n=0 返回 0              = 0
+  [PASS] count_if NULL 返回 0             = 0
+  [PASS] find_if(is_even) 命中第 1 个   命中第 1 个
+  [PASS] find_if(is_neg) 命中第 1 个    命中第 1 个
+  [PASS] find_if(is_big) 找不到返回 NULL 是 NULL
+  [PASS] find_if n=0 返回 NULL            是 NULL
+  [PASS] find_if arr=NULL 返回 NULL       是 NULL
+  [PASS] sort_by(cmp_asc) 升序            全对
+  [PASS] sort_by(cmp_desc) 降序           全对
+  [PASS] sort_by 单元素不崩            = 42
+  [PASS] sort_by NULL / n=0                 不崩
+
+结果: 17 通过, 0 失败
+
+===================== p03_const =====================
+=== p03 const 与指针 ===
+
+sizeof(int *)        = 8
+sizeof(const int *)  = 8   ← 一样大，const 不占地方
+
+--- 测试 ---
+  [PASS] sum_readonly 求和 = 15             = 15
+  [PASS] sum_readonly 传 const 数组也行  = 60
+  [PASS] sum_readonly n=0 返回 0            = 0
+  [PASS] sum_readonly NULL 返回 0           = 0
+  [PASS] scale_writer(&v, 3) 后 v            = 21
+  [PASS] 再来一次 (21*2)                  = 42
+  [PASS] scale_writer(NULL)                   不崩
+  [PASS] read_both(&w) 读到 99              = 99
+  [PASS] read_both(NULL) 返回 -1            = -1
+  [PASS] my_strlen_const("hello")             = 5
+  [PASS] my_strlen_const("")                  = 0
+  [PASS] my_strlen_const("嵌入式")         = 9
+  [PASS] my_strlen_const(NULL)                = 0
+
+结果: 13 通过, 0 失败
+
+===================== p04_struct =====================
+=== p04 结构体指针 ===
+
+sizeof(sensor_t) = 16 字节   ← 4 + 4 + 8，对齐到 4
+按值传参会拷这么多字节；传指针只拷 8 字节
+
+--- 测试 ---
+  [PASS] arr[0].id 初始化                  = 1
+  [PASS] arr[0].value 初始化               = 100
+  [PASS] arr[1].id 初始化                  = 2
+  [PASS] name 是空串                       = 1
+  [PASS] sizeof(sensor_t) 是 16              = 16
+  [PASS] sensor_init(NULL)                    不崩
+  [PASS] sensor_total = 600                   = 600
+  [PASS] sensor_total n=0                     = 0
+  [PASS] sensor_total NULL                    = 0
+  [PASS] sensor_find(id=2) 命中 arr[1]      指向同一处
+  [PASS] 找到的记录 value = 200          = 200
+  [PASS] sensor_find(id=9) 返回 NULL        指向同一处
+  [PASS] sensor_find NULL 返回 NULL         指向同一处
+  [PASS] 通过返回的指针改，改动落在原数组 = 999
+  [PASS] scale_all 后 arr[0].value           = 200
+  [PASS] scale_all 后 arr[1].value           = 1998
+  [PASS] scale_all 后 arr[2].value           = 600
+  [PASS] 改副本后副本是 0              = 0
+  [PASS] 原数组还是 200（这就是按值传参的真相） = 200
+
+结果: 19 通过, 0 失败
+
+===================== p05_menu =====================
+=== p05 函数指针数组：命令菜单 ===
+
+MENU_N = 3 条命令   ← sizeof 算出来的，加一行就自动 +1
+
+--- 测试 ---
+  [PASS] find_command("status")                 指向同一条
+  [PASS] 查到的那条 handler 是 cmd_status = 1
+  [PASS] find_command("reboot") 返回 NULL     指向同一条
+  [PASS] find_command(NULL 名字) 返回 NULL  指向同一条
+  [PASS] find_command(n=0) 返回 NULL          指向同一条
+  [PASS] run_command("led on") 返回 0         = 0
+  [PASS]   → g_on 加了 1                    = 1
+  [PASS]   → 别的命令没被误调         = 0
+  [PASS] 再执行一次 led on                 = 0
+  [PASS]   → g_on = 2                         = 2
+  [PASS] run_command("led off")                 = 0
+  [PASS]   → g_off 加了 1                   = 1
+  [PASS]   → g_on 没变                      = 2
+  [PASS] run_command("reboot") 返回 -1        = -1
+  [PASS]   → 一个 handler 都没被调      = 0
+  [PASS] run_command 名字为 NULL 返回 -1   = -1
+  [PASS] run_command n=0 返回 -1              = -1
+  [PASS] run_command table=NULL 返回 -1       = -1
+  [PASS]   → 全程没有 handler 被调      = 0
+  [PASS] run_all 后 3 个命令都执行了    = 3
+  [PASS]   → g_on                             = 1
+  [PASS]   → g_off                            = 1
+  [PASS]   → g_status                         = 1
+  [PASS] run_all 空表不崩、不执行       = 0
+  [PASS] help_of("led on") 返回表里那条的 help 指向同一条
+  [PASS] help_of("led off") 返回表里那条的 help 指向同一条
+  [PASS] help_of("reboot") 返回 NULL          指向同一条
+
+结果: 27 通过, 0 失败
+
+===================== p06_bug =====================
+=== p06 指针 bug 挑错 ===
+
+--- bug 1 未初始化的函数指针 ---
+  [PASS] call_if_set(record, 42) 真的调了 = 42
+  [PASS] call_if_set(NULL) 不崩、也没调 = -1
+
+--- bug 2 回调改不到外部变量 ---
+  [PASS] walk_with_ctx 累加到 ctx 里    = 10
+  [PASS] 换个 ctx 就累加到别处（不碰全局） = 110
+  [PASS] arr=NULL 不崩                    = 0
+  [PASS] fn=NULL 不崩                     = 0
+
+--- bug 3 结构体按值传改不到 ---
+  [PASS] bump_by_value 改不到外面（这就是那个 bug） = 10
+  [PASS] bump_by_ptr 改到了              = 11
+  [PASS] bump_by_ptr(NULL)                  不崩
+
+--- bug 4 比较器减法溢出 ---
+  [PASS] cmp_safe(大, 小) > 0             = 1
+  [PASS] cmp_safe(小, 大) < 0             = 1
+  [PASS] cmp_safe(相等) == 0              = 0
+  [PASS] qsort(..., cmp_safe) 排序正确  全对
+
+（对照）sizeof(item_t) = 8 —— 按值传一次就拷这么多字节
+
+结果: 13 通过, 0 失败
+
