@@ -1,0 +1,139 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="680" height="790" viewBox="0 0 680 790" font-family="Microsoft YaHei, PingFang SC, Noto Sans CJK SC, sans-serif">
+  <defs>
+    <pattern id="hatch" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <line x1="0" y1="0" x2="0" y2="8" stroke="#c9c8c0" stroke-width="2"/>
+    </pattern>
+  </defs>
+
+  <rect width="680" height="790" fill="#fdfcf8"/>
+
+  <!-- 标题 -->
+  <rect x="28" y="30" width="4" height="24" rx="2" fill="#3f6fa8"/>
+  <text x="42" y="49" font-size="21" font-weight="700" fill="#23262b">结构体内存布局（单位：字节）</text>
+  <text x="42" y="70" font-size="11.5" fill="#6b6f76">2026-11-04 · 第 1 周第 3 天 · sensor_t 20 字节 / probe_t 12 字节 · 偏移从 0 开始，地址向右增长</text>
+
+  <!-- 图例 -->
+  <rect x="500" y="36" width="12" height="12" rx="2" fill="#dbe9f8" stroke="#6b9bcb"/>
+  <text x="517" y="46" font-size="10.5" fill="#4a5b6b">char</text>
+  <rect x="548" y="36" width="12" height="12" rx="2" fill="#ffe3c2" stroke="#cf9350"/>
+  <text x="565" y="46" font-size="10.5" fill="#6b5335">int</text>
+  <rect x="592" y="36" width="12" height="12" rx="2" fill="#edece7" stroke="#b5b4ac" stroke-dasharray="3 2"/>
+  <text x="609" y="46" font-size="10.5" fill="#8a8a82">填充</text>
+
+  <!-- ============ ① sensor_t ============ -->
+  <text x="28" y="104" font-size="14.5" font-weight="700" fill="#1f4e79">① sensor_t：12 + 4 + 4 = 20，一个填充字节都没有</text>
+  <text x="60" y="124" font-size="11" font-family="Consolas, Courier New, monospace" fill="#6b6f76">struct { char name[12]; int id; int value; };</text>
+  <text x="52" y="140" font-size="10" fill="#9a9ea4" text-anchor="end">偏移</text>
+
+  <!-- row0 -->
+  <text x="52" y="162" font-size="10" font-family="Consolas, monospace" fill="#8a8e94" text-anchor="end">0</text>
+  <rect x="60" y="142" width="400" height="32" rx="3" fill="#dbe9f8" stroke="#6b9bcb" stroke-width="1.2"/>
+  <line x1="160" y1="142" x2="160" y2="174" stroke="#a9c6e0"/>
+  <line x1="260" y1="142" x2="260" y2="174" stroke="#a9c6e0"/>
+  <line x1="360" y1="142" x2="360" y2="174" stroke="#a9c6e0"/>
+  <text x="260" y="163" font-size="12" fill="#20486b" text-anchor="middle">name[0] … name[3]</text>
+
+  <!-- row1 -->
+  <text x="52" y="198" font-size="10" font-family="Consolas, monospace" fill="#8a8e94" text-anchor="end">4</text>
+  <rect x="60" y="178" width="400" height="32" rx="3" fill="#dbe9f8" stroke="#6b9bcb" stroke-width="1.2"/>
+  <line x1="160" y1="178" x2="160" y2="210" stroke="#a9c6e0"/>
+  <line x1="260" y1="178" x2="260" y2="210" stroke="#a9c6e0"/>
+  <line x1="360" y1="178" x2="360" y2="210" stroke="#a9c6e0"/>
+  <text x="260" y="199" font-size="12" fill="#20486b" text-anchor="middle">name[4] … name[7]</text>
+
+  <!-- row2 -->
+  <text x="52" y="234" font-size="10" font-family="Consolas, monospace" fill="#8a8e94" text-anchor="end">8</text>
+  <rect x="60" y="214" width="400" height="32" rx="3" fill="#dbe9f8" stroke="#6b9bcb" stroke-width="1.2"/>
+  <line x1="160" y1="214" x2="160" y2="246" stroke="#a9c6e0"/>
+  <line x1="260" y1="214" x2="260" y2="246" stroke="#a9c6e0"/>
+  <line x1="360" y1="214" x2="360" y2="246" stroke="#a9c6e0"/>
+  <text x="260" y="235" font-size="12" fill="#20486b" text-anchor="middle">name[8] … name[11]</text>
+
+  <!-- row3 -->
+  <text x="52" y="270" font-size="10" font-family="Consolas, monospace" fill="#8a8e94" text-anchor="end">12</text>
+  <rect x="60" y="250" width="400" height="32" rx="3" fill="#ffe3c2" stroke="#cf9350" stroke-width="1.2"/>
+  <line x1="160" y1="250" x2="160" y2="282" stroke="#e0b884"/>
+  <line x1="260" y1="250" x2="260" y2="282" stroke="#e0b884"/>
+  <line x1="360" y1="250" x2="360" y2="282" stroke="#e0b884"/>
+  <text x="260" y="271" font-size="12" fill="#6b4a1e" text-anchor="middle">id</text>
+
+  <!-- row4 -->
+  <text x="52" y="306" font-size="10" font-family="Consolas, monospace" fill="#8a8e94" text-anchor="end">16</text>
+  <rect x="60" y="286" width="400" height="32" rx="3" fill="#ffe3c2" stroke="#cf9350" stroke-width="1.2"/>
+  <line x1="160" y1="286" x2="160" y2="318" stroke="#e0b884"/>
+  <line x1="260" y1="286" x2="260" y2="318" stroke="#e0b884"/>
+  <line x1="360" y1="286" x2="360" y2="318" stroke="#e0b884"/>
+  <text x="260" y="307" font-size="12" fill="#6b4a1e" text-anchor="middle">value</text>
+
+  <!-- sensor_t 右侧标签 -->
+  <text x="476" y="186" font-size="12" fill="#20486b">char name[12]</text>
+  <text x="476" y="203" font-size="10.5" fill="#6b6f76">偏移 0 .. 11（12 字节）</text>
+  <text x="476" y="266" font-size="12" fill="#6b4a1e">int id</text>
+  <text x="476" y="283" font-size="10.5" fill="#6b6f76">偏移 12（4 字节）</text>
+  <text x="476" y="302" font-size="12" fill="#6b4a1e">int value</text>
+  <text x="476" y="319" font-size="10.5" fill="#6b6f76">偏移 16（4 字节）</text>
+
+  <text x="60" y="342" font-size="11.5" fill="#3a3f45">sizeof(sensor_t) = 20。<tspan fill="#6b6f76">12 能被 4 整除，id 落在偏移 12 天然对齐；末尾 20 也是 4 的倍数，不用补。</tspan></text>
+
+  <!-- ============ ② probe_t ============ -->
+  <text x="28" y="388" font-size="14.5" font-weight="700" fill="#8a4b1f">② probe_t：1 + 4 + 1 = 6，实际占 12 —— 多出来的 6 字节全是填充</text>
+  <text x="60" y="408" font-size="11" font-family="Consolas, Courier New, monospace" fill="#6b6f76">struct { char a; int b; char c; };</text>
+  <text x="52" y="424" font-size="10" fill="#9a9ea4" text-anchor="end">偏移</text>
+
+  <!-- row0: a + 3 填充 -->
+  <text x="52" y="446" font-size="10" font-family="Consolas, monospace" fill="#8a8e94" text-anchor="end">0</text>
+  <rect x="60" y="426" width="100" height="32" rx="3" fill="#dbe9f8" stroke="#6b9bcb" stroke-width="1.2"/>
+  <text x="110" y="447" font-size="12" fill="#20486b" text-anchor="middle">a</text>
+  <rect x="160" y="426" width="300" height="32" rx="3" fill="#edece7" stroke="#b5b4ac" stroke-width="1.2" stroke-dasharray="4 3"/>
+  <rect x="161" y="427" width="298" height="30" rx="2" fill="url(#hatch)" opacity="0.55"/>
+  <text x="310" y="447" font-size="11.5" fill="#7d7d75" text-anchor="middle">填充 3 字节</text>
+
+  <!-- row1: b -->
+  <text x="52" y="482" font-size="10" font-family="Consolas, monospace" fill="#8a8e94" text-anchor="end">4</text>
+  <rect x="60" y="462" width="400" height="32" rx="3" fill="#ffe3c2" stroke="#cf9350" stroke-width="1.2"/>
+  <line x1="160" y1="462" x2="160" y2="494" stroke="#e0b884"/>
+  <line x1="260" y1="462" x2="260" y2="494" stroke="#e0b884"/>
+  <line x1="360" y1="462" x2="360" y2="494" stroke="#e0b884"/>
+  <text x="260" y="483" font-size="12" fill="#6b4a1e" text-anchor="middle">b</text>
+
+  <!-- row2: c + 3 填充 -->
+  <text x="52" y="518" font-size="10" font-family="Consolas, monospace" fill="#8a8e94" text-anchor="end">8</text>
+  <rect x="60" y="498" width="100" height="32" rx="3" fill="#dbe9f8" stroke="#6b9bcb" stroke-width="1.2"/>
+  <text x="110" y="519" font-size="12" fill="#20486b" text-anchor="middle">c</text>
+  <rect x="160" y="498" width="300" height="32" rx="3" fill="#edece7" stroke="#b5b4ac" stroke-width="1.2" stroke-dasharray="4 3"/>
+  <rect x="161" y="499" width="298" height="30" rx="2" fill="url(#hatch)" opacity="0.55"/>
+  <text x="310" y="519" font-size="11.5" fill="#7d7d75" text-anchor="middle">填充 3 字节（末尾补齐）</text>
+
+  <!-- probe_t 右侧标签 -->
+  <text x="476" y="446" font-size="11.5" fill="#6b6f76">char a（1）</text>
+  <text x="476" y="482" font-size="11.5" fill="#6b4a1e">int b（4）</text>
+  <text x="476" y="518" font-size="11.5" fill="#20486b">char c（1）</text>
+
+  <text x="60" y="548" font-size="11.5" fill="#3a3f45">sizeof(probe_t) = 12。<tspan fill="#6b6f76">中间补 3 字节，让 b 落在偏移 4（4 的倍数）；末尾再补 3 字节，让数组里每个元素都对齐。</tspan></text>
+  <text x="60" y="566" font-size="11.5" fill="#6b6f76">同样这三个成员，6 字节的活占了 12 字节：<tspan fill="#8a4b1f" font-weight="700">一半是填充</tspan>。</text>
+
+  <!-- ============ ③ 换顺序 ============ -->
+  <text x="28" y="606" font-size="14.5" font-weight="700" fill="#2f6b34">③ 成员一样，顺序一换就变成 8 字节</text>
+  <text x="60" y="626" font-size="11" font-family="Consolas, Courier New, monospace" fill="#6b6f76">struct { int b; char a; char c; };   →   sizeof = 8</text>
+
+  <text x="52" y="662" font-size="10" font-family="Consolas, monospace" fill="#8a8e94" text-anchor="end">0</text>
+  <rect x="60" y="642" width="200" height="32" rx="3" fill="#ffe3c2" stroke="#cf9350" stroke-width="1.2"/>
+  <text x="160" y="663" font-size="12" fill="#6b4a1e" text-anchor="middle">int b（4 字节）</text>
+  <rect x="260" y="642" width="50" height="32" rx="3" fill="#dbe9f8" stroke="#6b9bcb" stroke-width="1.2"/>
+  <text x="285" y="663" font-size="12" fill="#20486b" text-anchor="middle">a</text>
+  <rect x="310" y="642" width="50" height="32" rx="3" fill="#dbe9f8" stroke="#6b9bcb" stroke-width="1.2"/>
+  <text x="335" y="663" font-size="12" fill="#20486b" text-anchor="middle">c</text>
+  <rect x="360" y="642" width="100" height="32" rx="3" fill="#edece7" stroke="#b5b4ac" stroke-width="1.2" stroke-dasharray="4 3"/>
+  <rect x="361" y="643" width="98" height="30" rx="2" fill="url(#hatch)" opacity="0.55"/>
+  <text x="410" y="663" font-size="11" fill="#7d7d75" text-anchor="middle">填充 2</text>
+
+  <text x="476" y="656" font-size="11.5" fill="#2f6b34">顺序：大的放前面</text>
+  <text x="476" y="673" font-size="10.5" fill="#6b6f76">12 → 8 字节</text>
+
+  <text x="60" y="702" font-size="11.5" fill="#3a3f45">1000 条记录：12 字节 × 1000 = 12 KB，8 字节 × 1000 = 8 KB，<tspan fill="#8a4b1f" font-weight="700">差 4 KB</tspan>。</text>
+  <text x="60" y="720" font-size="11.5" fill="#6b6f76">STM32F103ZET6 一共只有 64 KB RAM —— 这就是“结构体大小不等于成员之和”在真实项目里的价格。</text>
+
+  <!-- 页脚 -->
+  <line x1="28" y1="746" x2="652" y2="746" stroke="#dcdad2"/>
+  <text x="28" y="766" font-size="11" fill="#9a9ea4">目标：不看这张图，白纸上把 sensor_t 的 20 格、probe_t 的 12 格（含 6 格填充）画对，并说出填充为什么在那儿。</text>
+</svg>
