@@ -1,0 +1,261 @@
+运行环境：gcc.exe (x86_64-win32-seh-rev0, Built by MinGW-Builds project) 13.2.0
+生成时间：2026-11-05 00:03
+
+===================== p01_struct_basic =====================
+=== p01 结构体：值语义与内存布局 ===
+
+sizeof(sensor_t) = 20   sizeof(probe_t) = 12
+offsetof 实测：name=0  id=12  value=16
+offsetof 实测：a=0  b=4  c=8
+
+sensor_t 的 20 字节长这样（偏移从 0 开始）：
+
+  +-------------+
+  | 0           |  name[0]  ~ name[11]   12 字节
+  | 1 ... 11    |
+  +-------------+
+  | 12          |  id                    4 字节
+  +-------------+
+  | 16          |  value                 4 字节
+  +-------------+  ← sizeof = 20，没有填充
+
+probe_t 的 12 字节长这样（同样的 1+4+1，却占 12）：
+
+  +---+---+---+---+---+---+---+---+---+---+---+---+
+  | a | 填充(3字节) |     b (4字节)     | c | 填充  |
+  +---+---+---+---+---+---+---+---+---+---+---+---+
+  0   1   2   3   4   5   6   7   8   9  10  11
+       ↑ 偏移 4 才是 int 的合法位置        ↑ 末尾也要补
+
+--- 测试 ---
+  [PASS] sizeof(sensor_t) 是 20                  = 20
+  [PASS] sizeof(probe_t) 是 12（1+4+1 却占 12） = 12
+  [PASS] offset_of_value()                        = 16
+  [PASS] padding_of_probe() 填充字节数       = 6
+  [PASS] make_sensor 的 id                       = 1
+  [PASS] make_sensor 的 value                    = 100
+  [PASS] make_sensor 的 name                     "temp"
+  [PASS] name 传 NULL 时是空串               ""
+  [PASS] name 传 NULL 时 id 仍然要赋值     = 2
+  [PASS] 超长名字被截断到 11 个字符    "0123456789A"
+  [PASS] cmp_by_id(1, 9) 返回 -1                = -1
+  [PASS] cmp_by_id(9, 1) 返回 1                 = 1
+  [PASS] cmp_by_id 只比 id，value 不同也算相等 = 0
+  [PASS] cmp_by_id(NULL, x) 返回 0              = 0
+
+结果: 14 通过, 0 失败
+
+===================== p02_struct_array =====================
+=== p02 结构体数组：遍历与查找 ===
+
+表里 5 条记录：
+  [0] id=3  temp   value=25
+  [1] id=1  hum    value=60
+  [2] id=4  pres   value=25
+  [3] id=2  light  value=90
+  [4] id=5  volt   value=12
+
+--- 测试 ---
+  [PASS] count_above(limit=25) 严格大于才算 = 2
+  [PASS] count_above(limit=0) 全部大于        = 5
+  [PASS] count_above(limit=1000) 一个都不大于 = 0
+  [PASS] count_above(NULL) 返回 0               = 0
+  [PASS] count_above n=0 返回 0                 = 0
+  [PASS] max_index 最大值在下标 3           = 3
+  [PASS] max_index 只看第 1 条时是 0        = 0
+  [PASS] max_index(NULL) 返回 -1                = -1
+  [PASS] max_index n=0 返回 -1                  = -1
+  [PASS] index_of_id(4) 在下标 2               = 2
+  [PASS] index_of_id(1) 在下标 1（下标 0 才是真陷阱） = 1
+  [PASS] index_of_id(99) 找不到返回 -1       = -1
+  [PASS] index_of_id(NULL) 返回 -1              = -1
+  [PASS] average_value = (25+60+25+90+12)/5       = 42
+  [PASS] average_value n=0 返回 0               = 0
+  [PASS] average_value(NULL) 返回 0             = 0
+
+结果: 16 通过, 0 失败
+
+===================== p03_typedef_enum =====================
+=== p03 typedef 与 enum ===
+
+枚举值：IDLE=0  RUN=1  FAULT=2  COUNT=3（哨兵）
+sizeof(dev_state_t) = 4（枚举本质就是个整数）
+
+--- 测试 ---
+  [PASS] STATE_COUNT 自动递增到 3              = 3
+  [PASS] next_state(IDLE, 无故障) → RUN        = 1
+  [PASS] next_state(RUN, 无故障) → RUN         = 1
+  [PASS] next_state(IDLE, 有故障) → FAULT      = 2
+  [PASS] next_state(RUN, 有故障) → FAULT       = 2
+  [PASS] next_state(FAULT, 无故障) → 保持 FAULT = 2
+  [PASS] next_state(FAULT, 有故障) → 还是 FAULT = 2
+  [PASS] next_state(非法值 99) → 归一到 IDLE = 0
+  [PASS] state_name(IDLE)                           "IDLE"
+  [PASS] state_name(RUN)                            "RUN"
+  [PASS] state_name(FAULT)                          "FAULT"
+  [PASS] state_name(99) 越界返回 UNKNOWN        "UNKNOWN"
+  [PASS] state_is_valid(IDLE) = 1                   = 1
+  [PASS] state_is_valid(FAULT) = 1                  = 1
+  [PASS] state_is_valid(3) 哨兵不算合法       = 0
+  [PASS] state_is_valid(99) = 0                     = 0
+  [PASS] state_is_valid(-1) = 0                     = 0
+  [PASS] state_from_name("RUN") → STATE_RUN       = 1
+  [PASS] state_from_name("FAULT") → STATE_FAULT   = 2
+  [PASS] state_from_name("run") 大小写敏感 → STATE_COUNT = 3
+  [PASS] state_from_name(NULL) → STATE_COUNT      = 3
+
+结果: 21 通过, 0 失败
+
+===================== p04_union =====================
+=== p04 共用体 ===
+
+sizeof(unsigned int)  = 4
+sizeof(unsigned char[4]) = 4
+sizeof(u32_u)         = 4   ← 不是 8，是 4：成员叠在一起
+
+写 u.u32 = 0x01020304 之后，从字节那头看：
+  b[0]=0x04  b[1]=0x03  b[2]=0x02  b[3]=0x01
+  b[0] 是 0x04 → 小端（最低地址存最低有效字节）
+
+--- 测试 ---
+  [PASS] is_little_endian()（这台机器）         = 1
+  [PASS] union_size_of() = 4 而不是 8              = 4
+
+  [PASS] pack_rgba(0x11,0x22,0x33,0x44)               = 0x11223344
+  [PASS] pack_rgba(0,0,0,0)                           = 0x00000000
+  [PASS] pack_rgba(255,255,255,255) 全 0xFF          = 0xFFFFFFFF
+  [PASS] pack_rgba(255,0,0,0) 只填 r（符号位陷阱） = 0xFF000000
+  [PASS] unpack_rgba 正常返回 1                   = 1
+  [PASS]   out[0] = 0x11（r）                       = 17
+  [PASS]   out[1] = 0x22（g）                       = 34
+  [PASS]   out[2] = 0x33（b）                       = 51
+  [PASS]   out[3] = 0x44（a）                       = 68
+  [PASS] unpack_rgba(NULL) 返回 0                   = 0
+  [PASS] 往返：unpack 再 pack 应该原样回来  = 0xDEADBEEF
+
+结果: 13 通过, 0 失败
+
+===================== p05_sensor_table =====================
+=== p05 传感器表：10 条记录，排序，打印 ===
+
+① 原始顺序（从 ROM 拷过来的）
+   拷了 10 条
+  +-----+-------+----------+
+  | id  | value | name     |
+  +-----+-------+----------+
+  | 104 | 25    | temp     |
+  | 101 | 61    | hum      |
+  | 109 | 12    | pres     |
+  | 103 | 88    | light    |
+  | 107 | 33    | volt     |
+  | 102 | 47    | co2      |
+  | 110 | 5     | dist     |
+  | 105 | 72    | flow     |
+  | 108 | 19    | ph       |
+  | 106 | 54    | rpm      |
+  +-----+-------+----------+
+
+② 按 id 升序
+  +-----+-------+----------+
+  | id  | value | name     |
+  +-----+-------+----------+
+  | 101 | 61    | hum      |
+  | 102 | 47    | co2      |
+  | 103 | 88    | light    |
+  | 104 | 25    | temp     |
+  | 105 | 72    | flow     |
+  | 106 | 54    | rpm      |
+  | 107 | 33    | volt     |
+  | 108 | 19    | ph       |
+  | 109 | 12    | pres     |
+  | 110 | 5     | dist     |
+  +-----+-------+----------+
+
+③ 按 value 降序（同一份排序代码，换个比较器）
+  +-----+-------+----------+
+  | id  | value | name     |
+  +-----+-------+----------+
+  | 103 | 88    | light    |
+  | 105 | 72    | flow     |
+  | 101 | 61    | hum      |
+  | 106 | 54    | rpm      |
+  | 102 | 47    | co2      |
+  | 107 | 33    | volt     |
+  | 104 | 25    | temp     |
+  | 108 | 19    | ph       |
+  | 109 | 12    | pres     |
+  | 110 | 5     | dist     |
+  +-----+-------+----------+
+
+④ 只留 value > 50 的记录（筛出 4 条）
+  +-----+-------+----------+
+  | id  | value | name     |
+  +-----+-------+----------+
+  | 103 | 88    | light    |
+  | 105 | 72    | flow     |
+  | 101 | 61    | hum      |
+  | 106 | 54    | rpm      |
+  +-----+-------+----------+
+
+--- 测试 ---
+  [PASS] load_table(cap=12) 拷了 10 条           = 10
+  [PASS]   拷过来的第 1 条 id 是 104（原顺序） = 104
+  [PASS]   拷过来的最后 1 条 id 是 106（rpm） = 106
+  [PASS] load_table(cap=3) 截断成 3 条          = 3
+  [PASS] load_table(NULL) 返回 0                  = 0
+  [PASS] load_table(cap=0) 返回 0                 = 0
+  [PASS] 按 id 排序后第 1 条 id               = 101
+  [PASS]   它的名字是 hum                      = 1
+  [PASS] 按 id 排序后最后 1 条 id            = 110
+  [PASS]   全部 id 严格递增（排序真的生效了） = 1
+  [PASS] 按 value 降序第 1 条的 value         = 88
+  [PASS] 按 value 降序最后 1 条的 value      = 5
+  [PASS] sort_table 单元素不崩                 = 1
+  [PASS] sort_table n=0 不崩                      = 1
+  [PASS] sort_table cmp=NULL 不崩                 = 1
+  [PASS] total_value = 416                          = 416
+  [PASS] total_value n=0 返回 0                   = 0
+  [PASS] total_value NULL 返回 0                  = 0
+  [PASS] filter_above(>50) 返回 4 条             = 4
+  [PASS]   通过 dst_n 回传的也是 4           = 4
+  [PASS]   第 1 条 value 是 61                   = 61
+  [PASS]   第 4 条 value 是 54                   = 54
+  [PASS] filter_above(>100) 一条都不剩         = 0
+  [PASS]   此时 dst_n 被置 0                    = 0
+  [PASS] filter_above(src=NULL) 返回 0            = 0
+  [PASS]   此时 dst_n 被清成 0（不是 -1）  = 0
+  [PASS] filter_above(n=0) 返回 0                 = 0
+  [PASS]   此时 dst_n 被清成 0（不是 -1）  = 0
+  [PASS] filter_above(dst_n=NULL) 返回 0 且不崩 = 0
+
+结果: 29 通过, 0 失败
+
+===================== p06_bug =====================
+=== p06 结构体上的四个 bug ===
+
+sizeof(rec_t) = 12（char[8] + int，无填充）
+
+--- 测试 ---
+  [PASS] same_id 只比 id：名字不同但 id 相同 → 1 = 1
+  [PASS] same_id id 不同 → 0                      = 0
+  [PASS] same_id(NULL, x) → 0                       = 0
+  [PASS] same_id(x, NULL) → 0                       = 0
+  [PASS] name_of(0)                                   "IDLE"
+  [PASS] name_of(2)                                   "FAULT"
+  [PASS] name_of(3) 真的是 NULL                    = 1
+  [PASS] name_of(-1) 真的是 NULL                   = 1
+  [PASS] name_of(999) 真的是 NULL                  = 1
+  [PASS] set_name 正常拷                           "temp"
+  [PASS] 超长名字被截断到 7 个字符         "tempera"
+  [PASS]   截断时 id 没有被冲掉（溢出会盖掉它） = 1234
+  [PASS] src 为 NULL 时变成空串                 ""
+  [PASS] set_name(NULL) 不崩                        = 1
+  [PASS] qsort 后第 1 条 id 是 1                  = 1
+  [PASS] qsort 后第 5 条 id 是 5                  = 5
+  [PASS] 五条 id 严格递增（元素边界没错位） = 1
+  [PASS] 名字跟着 id 一起搬走了（不是只搬了半个元素） = 1
+  [PASS] sort_records(NULL) 不崩                    = 1
+  [PASS] sort_records n=0 不崩                      = 1
+
+结果: 20 通过, 0 失败
+
