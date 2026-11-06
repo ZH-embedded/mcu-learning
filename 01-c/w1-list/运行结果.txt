@@ -1,0 +1,52 @@
+运行环境：gcc.exe (x86_64-win32-seh-rev0, Built by MinGW-Builds project) 13.2.0
+生成时间：2026-11-07 00:14
+
+===================== test_list =====================
+=== 11-05 单链表：头插 / 尾插 / 查找 / 删除 / 释放 ===
+
+--- 测试 ---
+  [PASS] list_init 后 head == NULL                     = 1
+  [PASS] list_init 后 size == 0                        = 0
+  [PASS] push_front(1) 成功返回 1                   = 1
+  [PASS] 头插 1,2,3 → 3,2,1（后进先出）       [3 -> 2 -> 1] (n=3)
+  [PASS]   head 是最后插进去的 3                 = 3
+  [PASS]   size 跟着涨到 3                          = 3
+  [PASS] 空表上 push_back(1) 返回 1                = 1
+  [PASS] 空表尾插后 head 不为 NULL（最容易漏的分支） = 1
+  [PASS] 尾插 1,2,3 → 1,2,3（顺序不变）       [1 -> 2 -> 3] (n=3)
+  [PASS]   尾插后 size = 3                           = 3
+  [PASS] 头插 0 + 尾插 4 → 0,1,2,3,4              [0 -> 1 -> 2 -> 3 -> 4] (n=5)
+  [PASS] find(2) 命中，返回非 NULL                = 1
+  [PASS]   命中结点的 value = 2                    = 2
+  [PASS] find(99) 未命中返回 NULL                  = 1
+  [PASS] 空链表 find 返回 NULL（不是崩）      = 1
+  [PASS] remove(2) 删中间结点，返回 1           = 1
+  [PASS]   删完 → 0,1,3,4                           [0 -> 1 -> 3 -> 4] (n=4)
+  [PASS] remove(2) 再删一次返回 0（已经没了） = 0
+  [PASS] remove(0) 删头结点，返回 1              = 1
+  [PASS]   删完 → 1,3,4（head 已经指向 1）    [1 -> 3 -> 4] (n=3)
+  [PASS] remove(4) 删尾结点，返回 1              = 1
+  [PASS]   删完 → 1,3                               [1 -> 3] (n=2)
+  [PASS] remove(3) 返回 1                             = 1
+  [PASS]   删完 → 1                                 [1] (n=1)
+  [PASS] remove(1) 删最后一个，返回 1           = 1
+  [PASS]   删光后 size = 0                           = 0
+  [PASS]   删光后 head 必须回到 NULL             = 1
+  [PASS] 删光后再头插 7 → 7（链表还能用） [7] (n=1)
+  [PASS] 尾插三个 5 → 5,5,5                       [5 -> 5 -> 5] (n=3)
+  [PASS] remove(5) 一次只删一个，返回 1        = 1
+  [PASS]   还剩两个 5                               [5 -> 5] (n=2)
+  [PASS] 再 remove(5) 返回 1                         = 1
+  [PASS]   还剩一个 5                               [5] (n=1)
+  [PASS] destroy 后 head == NULL                       = 1
+  [PASS] destroy 后 size == 0                          = 0
+  [PASS] 再 destroy 一次不崩（可重复调用）  = 1
+  [PASS] push_front(NULL) 返回 0                      = 0
+  [PASS] push_back(NULL) 返回 0                       = 0
+  [PASS] remove(NULL) 返回 0                          = 0
+  [PASS] find(NULL) 返回 NULL                         = 1
+  [PASS] size(NULL) 返回 0                            = 0
+  [PASS] init(NULL) / destroy(NULL) 不崩              = 1
+
+结果: 42 通过, 0 失败
+

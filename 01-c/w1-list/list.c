@@ -42,8 +42,19 @@ void list_init(list_t *l)
  * ============================================================ */
 list_node_t *list_find(list_t *l, int v)
 {
-    (void)l;
-    (void)v;
+    if (l == NULL)
+    {
+        return NULL;
+    }
+
+    for (list_node_t* m = l->head; m != NULL; m = m->next)
+    {
+        if (v == m->value)
+        {
+            return m;
+        }
+
+    }
     return NULL;
 }
 
@@ -61,9 +72,21 @@ list_node_t *list_find(list_t *l, int v)
  * ============================================================ */
 int list_push_front(list_t *l, int v)
 {
-    (void)l;
-    (void)v;
-    return 0;
+    if (l == NULL)
+    {
+        return 0;
+    }
+
+    list_node_t* p = (list_node_t*)malloc(sizeof(list_node_t));
+    if(p == NULL)
+    {
+        return 0;
+    }
+    p->value = v;
+    p->next = l->head;
+    l->head = p;
+    l->count++;
+    return 1;
 }
 
 /* ============================================================
@@ -82,10 +105,37 @@ int list_push_front(list_t *l, int v)
  * ============================================================ */
 int list_push_back(list_t *l, int v)
 {
-    (void)l;
-    (void)v;
-    return 0;
+    if (l == NULL)
+    {
+        return 0;
+    }
+
+    list_node_t *p = (list_node_t *)malloc(sizeof(*p));
+    if (p == NULL)
+    {
+        return 0;
+    }
+    p->value = v;              /* 先把新节点装修好 */
+    p->next  = NULL;
+
+    if (l->head == NULL)       /* 空表：它就是唯一的节点 */
+    {
+        l->head = p;
+    }
+    else                       /* 非空：走到尾巴挂上去 */
+    {
+        list_node_t *m = l->head;
+        while (m->next != NULL)
+        {
+            m = m->next;
+        }
+        m->next = p;
+    }
+
+    l->count++;
+    return 1;
 }
+
 
 /* ============================================================
  * TODO 4：按值删除第一个匹配的结点，返回 1；没有这个值返回 0。
@@ -111,10 +161,40 @@ int list_push_back(list_t *l, int v)
  * ============================================================ */
 int list_remove(list_t *l, int v)
 {
-    (void)l;
-    (void)v;
-    return 0;
+    if (l == NULL)
+    {
+        return 0;
+    }
+
+    list_node_t *prev = NULL;       /* 头结点没有前驱，用 NULL 当标记 */
+    list_node_t *cur  = l->head;
+
+    while (cur != NULL)
+    {
+        if (cur->value == v)
+        {
+            list_node_t *next = cur->next;   /* free 之前先存下来 */
+
+            if (prev == NULL)
+            {
+                l->head = next;              /* 删的是头 */
+            }
+            else
+            {
+                prev->next = next;           /* 跨过 cur */
+            }
+
+            free(cur);
+            l->count--;
+            return 1;
+        }
+
+        prev = cur;                 /* 只是移动指针，不碰节点 */
+        cur  = cur->next;
+    }
+    return 0;                       /* 走到底没找到 */
 }
+
 
 /* ============================================================
  * TODO 5：释放整条链，并把 head / count 复位。
@@ -132,7 +212,21 @@ int list_remove(list_t *l, int v)
  * ============================================================ */
 void list_destroy(list_t *l)
 {
-    (void)l;
+    if (l == NULL)
+    {
+        return;
+    }
+
+    list_node_t* cur = l->head;
+    while (cur != NULL)
+    {
+        list_node_t* next = cur->next;
+        free(cur);
+        l->count--;
+        cur = next;
+    }
+    l->head = NULL;
+    l->count = 0;
 }
 
 /* ==================== 下面两个是给好的，不用改 ==================== */
