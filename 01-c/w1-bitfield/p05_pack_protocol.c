@@ -34,9 +34,19 @@ size_t normal_size(void) { return sizeof(normal_t); }
  * ============================================================ */
 uint32_t read_u32_le(const uint8_t *p)
 {
-    (void)p;
-    /* TODO：见上方注释 */
-    return 0;
+    if (p == NULL)
+    {
+        return 0;
+    }
+
+    uint32_t a = 0;
+
+    for (int i = 0; i < 4; i++)
+    {
+        a |= (uint32_t)p[i] << (i * 8);
+    }
+    
+    return a;
 }
 
 /* 写 32 位小端 */
@@ -48,8 +58,16 @@ uint32_t read_u32_le(const uint8_t *p)
  * ============================================================ */
 void write_u32_le(uint8_t *p, uint32_t v)
 {
-    (void)p; (void)v;
-    /* TODO：见上方注释 */
+    if (p == NULL)
+    {
+        return;
+    }
+
+    for (int i = 0; i < 4; i++)
+    {
+        p[i] = (v>>(i*8))&0xFF;
+    }
+    return;
 }
 
 /* 把结构体序列化成 7 字节线格式，返回写了几字节；0 表示失败 */
@@ -70,9 +88,15 @@ void write_u32_le(uint8_t *p, uint32_t v)
  * ============================================================ */
 size_t encode_packet(const normal_t *in, uint8_t *buf, size_t cap)
 {
-    (void)in; (void)buf; (void)cap;
-    /* TODO：见上方注释 */
+    if (in == NULL || buf == NULL ||cap < 7)
     return 0;
+    
+    buf[0] = in->tag;
+    write_u32_le(&buf[1], in->value);
+    buf[5] = (uint8_t)((in->crc)&0xFF);
+    buf[6] = (uint8_t)(((in->crc)>>8)&0xFF);
+    
+    return 7;
 }
 
 /* 从 7 字节线格式解析回结构体，0 成功，-1 失败 */
@@ -89,8 +113,14 @@ size_t encode_packet(const normal_t *in, uint8_t *buf, size_t cap)
  * ============================================================ */
 int decode_packet(const uint8_t *buf, size_t len, normal_t *out)
 {
-    (void)buf; (void)len; (void)out;
-    /* TODO：见上方注释 */
+    if (buf == NULL || out == NULL || len < 7)
+    {
+        return -1;
+    }
+    
+    out->tag = buf[0];
+    out->value = read_u32_le(&buf[1]);
+    out->crc = (uint32_t)buf[5] | (uint32_t)(buf[6]<<8);
     return 0;
 }
 
@@ -117,7 +147,18 @@ int main(void)
     uint8_t out4[4] = {0};
     write_u32_le(out4, 0x12345678u);
     ck("write_u32_le 第 0 字节", out4[0], 0x78);
+    ck("write_u32_le 第 1 字节", out4[1], 0x56);
+    ck("write_u32_le 第 2 字节", out4[2], 0x34);
     ck("write_u32_le 第 3 字节", out4[3], 0x12);
+
+    /* 高字节最高位为 1：专抓「先按 int 移位再拼」的未定义行为 */
+    uint8_t out4b[4] = {0};
+    write_u32_le(out4b, 0xDEADBEEFu);
+    ck("write_u32_le(0xDEADBEEF) 第 3 字节", out4b[3], 0xDE);
+    ck("write_u32_le 往返还原", (long long)read_u32_le(out4b), 0xDEADBEEFull);
+
+    write_u32_le(NULL, 0xFFFFFFFFu);   /* 只验证不崩 */
+    ck("write_u32_le(NULL) 不崩", 1, 1);
 
     printf("-- 序列化 --\n");
     normal_t in = {0};
@@ -134,6 +175,14 @@ int main(void)
     ck("  第 6 字节是 crc 高字节", buf[6], 0xBE);
     ck("  缓冲区不够时返回 0（cap=6）",
        (long long)encode_packet(&in, buf, 6), 0);
+
+    /* 失败路径一个字节都不许写：预填 0xAA，事后必须原样 */
+    uint8_t guard[8];
+    memset(guard, 0xAA, sizeof guard);
+    (void)encode_packet(&in, guard, 6);
+    ck("  cap 不足时缓冲区未被改动", guard[0], 0xAA);
+    ck("  in 为 NULL 返回 0", (long long)encode_packet(NULL, buf, sizeof buf), 0);
+    ck("  buf 为 NULL 返回 0", (long long)encode_packet(&in, NULL, sizeof buf), 0);
 
     printf("-- 反序列化 --\n");
     normal_t back;

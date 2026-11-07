@@ -37,8 +37,10 @@ int bug1_wrong(void)
  * ============================================================ */
 int bug1_fixed(void)
 {
-    /* TODO：见上方注释 */
-    return 0;
+    good_t a;
+    memset(&a, 0, sizeof(a));
+    a.flag = 1;
+    return a.flag;
 }
 
 /* ============================================================
@@ -67,8 +69,10 @@ int bug2_wrong(void)
  * ============================================================ */
 int bug2_fixed(void)
 {
-    /* TODO：见上方注释 */
-    return 0;
+    good_char_t b;
+    memset(&b, 0, sizeof b);
+    b.flag = 1;
+    return b.flag;
 }
 
 /* ============================================================
@@ -105,9 +109,19 @@ void bug3_wrong(const msg_t *m, uint8_t *buf)
  * ============================================================ */
 size_t bug3_fixed(const msg_t *m, uint8_t *buf, size_t cap)
 {
-    (void)m; (void)buf; (void)cap;
-    /* TODO：见上方注释 */
-    return 0;
+    if (m == NULL || buf == NULL || cap < 5)
+    {
+        return 0;
+    }
+
+    buf[0] = m->tag;
+    for (int i = 1; i < 5; i++)
+    {
+        buf[i] = (m->value >> ((i-1)*8))&0xFF;
+    }
+    
+    
+    return 5;
 }
 
 /* ============================================================
@@ -145,9 +159,15 @@ uint32_t bug4_wrong(const packed_msg_t *p)
  * ============================================================ */
 uint32_t bug4_fixed(const packed_msg_t *p)
 {
-    (void)p;
-    /* TODO：见上方注释 */
-    return 0;
+    if (p == NULL)
+    {
+        return 0;
+    }
+
+    uint32_t v = 0;
+    memcpy(&v, &p->value, sizeof v);
+    
+    return v;
 }
 
 /* ---------- 测试 ---------- */
@@ -166,9 +186,27 @@ int main(void)
     ck("错误版 int flag:1 存 1 读出来是 -1", bug1_wrong(), -1);
     ck("修复版 unsigned int flag:1 读出 1", bug1_fixed(), 1);
 
+    /* 位宽决定值域：1 位无符号只有 0/1，写 2 会被截成 0 */
+    good_t g2;
+    memset(&g2, 0, sizeof g2);
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Woverflow"
+#pragma GCC diagnostic ignored "-Wconversion"
+    g2.flag = 2;
+#pragma GCC diagnostic pop
+    ck("  unsigned:1 塞 2 被截成 0（值域只有 0/1）", (long long)g2.flag, 0);
+
+    /* 有符号那一位真正的伤害在算术上：-1 当计数用会倒扣 */
+    ck("  bug1 的 -1 参与算术会倒扣", (long long)(bug1_wrong() + 1), 0);
+    /* 但 if 判断照样为真，所以这个 bug 极难靠肉眼发现 */
+    ck("  if 判断照样为真，掩盖了 bug", bug1_wrong() != 0, 1);
+
     printf("-- bug2：char 位域默认也是 signed --\n");
     ck("错误版 char flag:1 读出来是 -1", bug2_wrong(), -1);
     ck("修复版 unsigned char flag:1 读出 1", bug2_fixed(), 1);
+    /* 基类型决定存储单元：同样 1 位，一个占 1 字节，一个占 4 字节 */
+    ck("  unsigned char:1 只占 1 字节", (long long)sizeof(good_char_t), 1);
+    ck("  unsigned int:1 占 4 字节（随基类型）", (long long)sizeof(good_t), 4);
 
     printf("-- bug3：结构体直接 memcpy 上线 --\n");
     msg_t m;

@@ -34,9 +34,21 @@ size_t cross16_size(void) { return sizeof(cross16_t); }
  * ============================================================ */
 unsigned char bits_pack(const int *v)
 {
-    (void)v;
-    /* TODO：见上方注释 */
-    return 0;
+    if (v == NULL)
+    {
+        return 0;
+    }
+    
+    unsigned char a = 0;
+    for (int i = 0; i < 8; i++)
+    {
+        if (v[i] != 0)
+        {
+           a =  a | (1<<i);
+        }
+    }
+    
+    return a;
 }
 
 /* 反过来拆 */
@@ -48,8 +60,17 @@ unsigned char bits_pack(const int *v)
  * ============================================================ */
 void bits_unpack(unsigned char b, int *out)
 {
-    (void)b; (void)out;
-    /* TODO：见上方注释 */
+    if (out == NULL)
+    {
+        return;
+    }
+
+    for (int i = 0; i < 8; i++)
+    {
+        out[i] = (b>>i)&1;
+    }
+    
+    
 }
 
 /* char 基类型：lo 占低 4 位，hi 另开一个字节 */
@@ -65,9 +86,13 @@ void bits_unpack(unsigned char b, int *out)
  * ============================================================ */
 unsigned short cross8_low16(unsigned char lo, unsigned char hi)
 {
-    (void)lo; (void)hi;
-    /* TODO：见上方注释 */
-    return 0;
+    u8_t u;
+    memset(&u, 0, sizeof u);
+    u.c.lo = (unsigned char)(lo & 0x0F);
+    u.c.hi = (unsigned char)(hi & 0x1F);
+    return (unsigned short)(u.raw[0] | (u.raw[1] << 8));
+
+
 }
 
 /* short 基类型：lo 占 bit0-3，hi 占 bit4-8，横跨两字节 */
@@ -84,9 +109,11 @@ unsigned short cross8_low16(unsigned char lo, unsigned char hi)
  * ============================================================ */
 unsigned short cross16_low16(unsigned char lo, unsigned char hi)
 {
-    (void)lo; (void)hi;
-    /* TODO：见上方注释 */
-    return 0;
+    u16_t u;
+    memset(&u, 0, sizeof u);
+    u.c.lo = (unsigned short)(lo & 0x0F);
+    u.c.hi = (unsigned short)(hi & 0x1F);
+    return (unsigned short)(u.raw[0] | (u.raw[1] << 8));
 }
 
 /* ---------- 测试 ---------- */

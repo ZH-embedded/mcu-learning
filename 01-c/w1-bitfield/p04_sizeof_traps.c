@@ -18,7 +18,7 @@
  *     - 不能写成函数：数组传进函数就退化成指针了
  *     - 只对**真正的数组**有效，对指针会算出 2（64 位下 8/4）
  * ============================================================ */
-#define ARRAY_LEN(a) 0      /* TODO：写一个求数组元素个数的宏 */
+#define ARRAY_LEN(a) (sizeof(a) / sizeof((a)[0]))       /* TODO：写一个求数组元素个数的宏 */
 
 /* 反面教材，已给出：形参 arr 已经退化成指针，sizeof 拿到 8 不是 40。
  * 注意 gcc 会报 -Wsizeof-array-argument —— 编译器其实在提醒你写错了，
@@ -46,8 +46,10 @@ int bad_param_len(int arr[10])
  * ============================================================ */
 size_t sizeof_no_eval(void)
 {
-    /* TODO：见上方注释 */
-    return 0;
+    int i = 0;
+    size_t s = sizeof(i++);
+    (void)s;
+    return (size_t)i;
 }
 
 /* TODO 3：比较两个 size_t，返回 -1 / 0 / 1。
@@ -62,9 +64,7 @@ size_t sizeof_no_eval(void)
  * ============================================================ */
 int compare_size(size_t a, size_t b)
 {
-    (void)a; (void)b;
-    /* TODO：见上方注释 */
-    return 0;
+    return (a > b) - (a < b);
 }
 
 /* TODO 4：返回形参 s 的大小（不是它指向的字符串长度） */
@@ -81,9 +81,8 @@ int compare_size(size_t a, size_t b)
  * ============================================================ */
 size_t param_ptr_size(const char s[16])
 {
-    (void)s;
-    /* TODO：见上方注释 */
-    return 0;
+    
+    return sizeof(s);
 }
 #pragma GCC diagnostic pop
 

@@ -20,8 +20,11 @@ typedef struct { char a[3]; short s; int i; } s4_t;
  * ============================================================ */
 int is_power_of_two(size_t n)
 {
-    (void)n;
-    /* TODO：见上方注释 */
+    if ((n != 0)&&((n&(n-1)) == 0))
+    {
+        return 1;
+    }
+    
     return 0;
 }
 
@@ -39,9 +42,13 @@ int is_power_of_two(size_t n)
  * ============================================================ */
 size_t align_up(size_t n, size_t align)
 {
-    (void)n; (void)align;
-    /* TODO：见上方注释 */
-    return 0;
+    if (align == 0)
+    {
+        return n;
+    }
+    
+    return ((n + align - 1) & ~(align - 1));
+    
 }
 
 /* 填充字节数 = sizeof - 各成员大小之和 */
@@ -53,9 +60,13 @@ size_t align_up(size_t n, size_t align)
  * ============================================================ */
 size_t padding_bytes(size_t size, size_t members_sum)
 {
-    (void)size; (void)members_sum;
-    /* TODO：见上方注释 */
-    return 0;
+    if (size < members_sum)
+    {
+        return 0;
+    }
+
+    return size - members_sum;
+    
 }
 
 /* 指针是否按 align 对齐 */
@@ -68,9 +79,13 @@ size_t padding_bytes(size_t size, size_t members_sum)
  * ============================================================ */
 int is_aligned(const void *p, size_t align)
 {
-    (void)p; (void)align;
-    /* TODO：见上方注释 */
-    return 0;
+    if (p == NULL || align == 0)
+    {
+        return 0;
+    }
+    
+    return (((uintptr_t)p % align) == 0);
+    
 }
 
 /* ---------- 测试 ---------- */
@@ -131,6 +146,10 @@ int main(void)
     ck("is_aligned(s1, 4)", (long long)is_aligned((const void *)&(s1_t){0}, 4), 1);
     ck("is_aligned(NULL, 4) 返回 0", (long long)is_aligned(NULL, 4), 0);
     ck("is_aligned(p, 0) 返回 0（防除零）", (long long)is_aligned((const void *)"x", 0), 0);
+    ck("is_aligned(s1+1, 4) 未对齐 → 0",
+       (long long)is_aligned((const char *)&(s1_t){0} + 1, 4), 0);
+    ck("is_aligned(s1+2, 2) 按 2 对齐 → 1",
+       (long long)is_aligned((const char *)&(s1_t){0} + 2, 2), 1);
 
     printf("结果: %d 通过, %d 失败\n", pass, fail);
     return fail != 0;
