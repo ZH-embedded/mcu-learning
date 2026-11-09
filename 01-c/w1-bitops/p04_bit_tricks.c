@@ -22,25 +22,29 @@
  */
 int count_ones(uint32_t v)
 {
-    (void)v;
+    int n = 0;
+    while (v)
+    {
+        v &= (v - 1);
+        v >>= 1;
+        n++;
+    }
 
-    /* TODO：见上方注释 */
-    return 0;
+    return n;
 }
 
 /* TODO 2：只保留最低位的那个 1，其余清零
  *
  *   - 一行：v & (0u - v)，也就是 v & -v
  *   - 0u - v 是无符号取负：等价于 ~v + 1，低位的 0 全变 1、最低的 1 保留
- *   - 注意必须写 0u - v，不能写 -v 再和 uint32_t 相与（那是有符号取负）
+ *   - v 是 uint32_t 时 -v 其实也对（无符号一元负号 = 2^32 - v，无 UB）；
+ *     但 0u - v 把「无符号」这件事写在脸上，不依赖读者记住类型提升规则。
+ *     真正危险的是 v 声明成 int 时：-INT_MIN 是 UB
  *   - 用途：遍历一个集合里的所有元素（每次取最低位、清掉、再取）
  */
 uint32_t lowest_bit(uint32_t v)
 {
-    (void)v;
-
-    /* TODO：见上方注释 */
-    return 0u;
+    return v & (0u - v);
 }
 
 /* TODO 3：判断 v 是不是 2 的幂（0 不是）
@@ -51,9 +55,11 @@ uint32_t lowest_bit(uint32_t v)
  */
 int is_power_of_two_u(uint32_t v)
 {
-    (void)v;
+    if (v != 0 && (v & (v - 1)) == 0)
+    {
+        return 1;
+    }
 
-    /* TODO：见上方注释 */
     return 0;
 }
 
@@ -65,10 +71,13 @@ int is_power_of_two_u(uint32_t v)
  */
 uint8_t reverse_bits8(uint8_t b)
 {
-    (void)b;
-
-    /* TODO：见上方注释 */
-    return 0u;
+    uint8_t c = 0;
+    for (int i = 0; i < 8; i++)
+    {
+        c = (uint8_t)((c << 1) | (b & 1u));
+        b >>= 1;
+    }
+    return c;
 }
 
 /* TODO 5：把 32 位整数的 4 个字节顺序颠倒（大小端互换）
@@ -80,17 +89,26 @@ uint8_t reverse_bits8(uint8_t b)
  */
 uint32_t swap_u32(uint32_t v)
 {
-    (void)v;
-
-    /* TODO：见上方注释 */
-    return 0u;
+    uint32_t a = v >> 24;            /* byte3 → byte0：最高 8 位搬到最低位 */
+    a = a | ((v >> 8) & 0xff00);     /* byte2 → byte1 */
+    a = a | ((v << 8) & 0xff0000);   /* byte1 → byte2 */
+    a = a | ((v & 0xff) << 24);      /* byte0 → byte3 */
+    return a;
 }
 
 static int pass = 0, fail = 0;
 static void ck(const char *name, long long got, long long want)
 {
-    if (got == want) { pass++; printf("  [PASS] %-44s = %lld\n", name, got); }
-    else { fail++; printf("  [FAIL] %-44s 期望 %lld，实际 %lld\n", name, want, got); }
+    if (got == want)
+    {
+        pass++;
+        printf("  [PASS] %-44s = %lld\n", name, got);
+    }
+    else
+    {
+        fail++;
+        printf("  [FAIL] %-44s 期望 %lld，实际 %lld\n", name, want, got);
+    }
 }
 
 int main(void)
@@ -107,7 +125,10 @@ int main(void)
     int same = 1;
     for (int b = 0; b < 32; b++)
     {
-        if (count_ones(1u << b) != 1) { same = 0; }
+        if (count_ones(1u << b) != 1)
+        {
+            same = 0;
+        }
     }
     ck("每个单 bit 值都只数出 1 个", same, 1);
 

@@ -23,18 +23,18 @@
  * ============================================================ */
 
 /* TODO 1：置位 —— 第 bit 位置 1，其余位不动 */
-#define REG_SET(reg, bit)    ((void)(reg), (void)(bit))                    /* TODO */
+#define REG_SET(reg, bit)    ((reg)|=(1u << (bit)))                    /* TODO */
 
 /* TODO 2：清位 —— 第 bit 位置 0，其余位不动
  *   提示：`reg &= (0u << bit)` 会把整个寄存器清空，因为 0u << bit 恒为 0 */
-#define REG_CLR(reg, bit)    ((void)(reg), (void)(bit))                    /* TODO */
+#define REG_CLR(reg, bit)    ((reg) &= ~(1u<<(bit)))                    /* TODO */
 
 /* TODO 3：取位 —— 只返回 0 或 1
  *   提示：只写 (reg) & (1u << bit) 得到的是「掩码」，不是「取值」 */
-#define REG_GET(reg, bit)    ((void)(reg), (void)(bit), 0u)               /* TODO */
+#define REG_GET(reg, bit)    (((reg)>>(bit))&1u)               /* TODO */
 
 /* TODO 4：翻转 —— 第 bit 位取反，其余位不动 */
-#define REG_TOGGLE(reg, bit) ((void)(reg), (void)(bit))                    /* TODO */
+#define REG_TOGGLE(reg, bit) ((reg) ^= (1u<<(bit)))                    /* TODO */
 
 /* ---------- 反面教材：不要模仿 ---------- */
 /* 1. 参数没括号：BAD_SET(r, 7 & 3) 展开成 r |= 1 << 7 & 3，

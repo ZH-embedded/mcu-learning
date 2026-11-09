@@ -44,12 +44,14 @@ static int field_ok(int pos, int width)
  */
 void field_set(uint32_t *reg, int pos, int width, uint32_t val)
 {
-    (void)reg;
-    (void)pos;
-    (void)width;
-    (void)val;
-    (void)field_mask;
-    (void)field_ok;
+    if (reg == NULL || field_ok(pos, width) == 0)
+    {
+        return;
+    }
+    
+    uint32_t a = field_mask(pos, width);
+    *reg &= ~a;
+    *reg |= (val << pos)&a;
 
     /* TODO：见上方注释 */
 }
@@ -62,12 +64,13 @@ void field_set(uint32_t *reg, int pos, int width, uint32_t val)
  */
 uint32_t field_get(uint32_t reg, int pos, int width)
 {
-    (void)reg;
-    (void)pos;
-    (void)width;
+     if (!field_ok(pos, width)) {
+        return 0u;
+    }
+    
+    uint32_t a = field_mask(pos, width);
+    return (reg & a)>>pos;
 
-    /* TODO：见上方注释 */
-    return 0u;
 }
 
 static int pass = 0, fail = 0;

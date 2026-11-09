@@ -28,10 +28,13 @@ enum { REG_BITS = 32 };
  */
 void bit_set(uint32_t *reg, int bit)
 {
-    (void)reg;
-    (void)bit;
+    if (reg == NULL || (bit < 0) || (bit >= REG_BITS))
+    {
+        return;
+    }
 
-    /* TODO：见上方注释 */
+    *reg |= (1u << bit);
+
 }
 
 /* TODO 2：清位 —— 第 bit 位置 0，其余位不动
@@ -42,10 +45,12 @@ void bit_set(uint32_t *reg, int bit)
  */
 void bit_clear(uint32_t *reg, int bit)
 {
-    (void)reg;
-    (void)bit;
+    if (reg == NULL ||(bit < 0) || (bit >= REG_BITS))
+    {
+        return;
+    }
 
-    /* TODO：见上方注释 */
+    *reg &= ~(1u<<bit);
 }
 
 /* TODO 3：取位 —— 返回第 bit 位，只可能是 0 或 1
@@ -56,11 +61,12 @@ void bit_clear(uint32_t *reg, int bit)
  */
 int bit_get(uint32_t reg, int bit)
 {
-    (void)reg;
-    (void)bit;
+    if ((bit < 0) || (bit >= REG_BITS))
+    {
+        return 0;
+    }
 
-    /* TODO：见上方注释 */
-    return 0;
+    return (reg>>bit)&1u;
 }
 
 /* TODO 4：翻转 —— 第 bit 位取反，其余位不动
@@ -71,10 +77,12 @@ int bit_get(uint32_t reg, int bit)
  */
 void bit_toggle(uint32_t *reg, int bit)
 {
-    (void)reg;
-    (void)bit;
+    if (reg == NULL ||(bit < 0) || (bit >= REG_BITS))
+    {
+        return;
+    }
 
-    /* TODO：见上方注释 */
+    *reg ^= (1u << bit);
 }
 
 /* 把 32 位打印成二进制，只用于看错在哪一位 */
@@ -123,6 +131,11 @@ int main(void)
     ck("clear 本来就 0 的位，不变", r, 0);
     r = 0x80000001; bit_clear(&r, 31);
     ck("clear bit31 后 bit0 还在", r, 0x00000001);
+    r = 0xFFFFFFFF; bit_clear(&r, 15);
+    ck("clear 中间位 bit15 → 0xFFFF7FFF", (long long)r, 0xFFFF7FFFLL);
+    r = 0xFFFFFFFF; bit_clear(&r, 5); bit_clear(&r, 5);
+    ck("连续 clear 同一位置两次，结果不变",
+       (long long)r, 0xFFFFFFDFLL);
 
     printf("-- 取位 --\n");
     ck("get(0x80000001, 0)  = 1", bit_get(0x80000001u, 0), 1);
